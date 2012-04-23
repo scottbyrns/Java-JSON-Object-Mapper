@@ -1,15 +1,20 @@
 package com.scottbyrns.utilities;
 
+import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
+import org.codehaus.jackson.map.deser.BeanDeserializerFactory;
 import org.codehaus.jackson.map.deser.CustomDeserializerFactory;
 import org.codehaus.jackson.map.deser.StdDeserializerProvider;
 import org.codehaus.jackson.map.ser.CustomSerializerFactory;
 
+import java.io.IOException;
+
 /**
- * Factory for configuring Jackson to use all our custom settings, serializers, and deserializers.
+ * The JSON Object Mapper will take map a JSON String to a simple entity.
  */
 public class JSONObjectMapper
 {
@@ -24,10 +29,10 @@ public class JSONObjectMapper
 
         //Custom Serializers
         CustomSerializerFactory csf = new CustomSerializerFactory();
-        getDefaultObjectMapper().setSerializerFactory(csf);
+        defaultObjectMapper.setSerializerFactory(csf);
 
         //Custom Deserializers
-        CustomDeserializerFactory customDeserializerFactory = new CustomDeserializerFactory();
+        BeanDeserializerFactory customDeserializerFactory = new BeanDeserializerFactory();
 
         StdDeserializerProvider stdDeserializerProvider = new StdDeserializerProvider(customDeserializerFactory);
 
@@ -45,20 +50,55 @@ public class JSONObjectMapper
 
     }
 
+    /**
+     * Set the default object mapper.
+     *
+     * @param defaultObjectMapper The default object mapper.
+     */
     private void setDefaultObjectMapper(ObjectMapper defaultObjectMapper) {
         this.defaultObjectMapper = defaultObjectMapper;
     }
 
+    /**
+     * Get the object mapper instance.
+     *
+     * @return Object mapper instance.
+     */
     public static JSONObjectMapper getInstance()
     {
         if (null == instance) {
             instance = new JSONObjectMapper();
         }
+
         return instance;
     }
 
-    public ObjectMapper getDefaultObjectMapper()
-    {
-        return defaultObjectMapper;
+    /**
+     * Map a JSON string to an entity.
+     *
+     * @param JSONString The JSON string to map.
+     * @param entity The entity the JSON will be mapped to.
+     * @param <T> The type of the entity.
+     *
+     * @return An instance of the specified entity hydrated with values from the JSON.
+     * @throws InvalidJSONStringException The JSON string provided was not valid.
+     * @throws FatalMappingException A fatal mapping exception occurred.
+     */
+    public <T> T mapJSONStringToEntity (String JSONString, Class<T> entity) throws InvalidJSONStringException, FatalMappingException {
+        T mappedEntity = null;
+        try {
+            mappedEntity = (T)defaultObjectMapper.readValue(JSONString, (Class)entity);
+        }
+        catch (JsonMappingException e) {
+            throw new FatalMappingException(e);
+        }
+        catch (JsonParseException e) {
+            throw new InvalidJSONStringException(e);
+        }
+        catch (IOException e) {
+            // I don't think we can fall through to this catch when mapping a string.
+            System.out.println("Exception not handled. See JSONObjectMapper#mapJSONStringToEntity.");
+        }
+        return mappedEntity;
     }
 }
