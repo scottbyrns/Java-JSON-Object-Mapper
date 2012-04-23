@@ -28,7 +28,7 @@
 
     <scm>
         <url>https://github.com/scottbyrns/Java-JSON-Object-Mapper</url>
-        <connection></connection>
+        <connection>git://github.com/scottbyrns/Java-JSON-Object-Mapper.git</connection>
     </scm>
     <developers>
         <developer>
