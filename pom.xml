@@ -30,19 +30,29 @@
         <url>https://github.com/scottbyrns/Java-JSON-Object-Mapper</url>
         <connection>git://github.com/scottbyrns/Java-JSON-Object-Mapper.git</connection>
     </scm>
+
     <developers>
         <developer>
-            <id>scottbyrns</id>
+            <id>scott</id>
             <name>Scott Byrns</name>
             <email>contact@scottbyrns.com</email>
+            <url>http://github.com/scottbyrns</url>
+            <organization>Scott Byrns</organization>
+            <organizationUrl>http://github.com/scottbyrns</organizationUrl>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+            <timezone>-10</timezone>
+            <properties>
+                <picUrl>http://tinyurl.com/scottbyrns</picUrl>
+            </properties>
         </developer>
     </developers>
-
 
     <properties>
         <jackson-version>1.9.4</jackson-version>
     </properties>
-
 
 
     <dependencies>
