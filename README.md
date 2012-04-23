@@ -44,8 +44,8 @@ Now that we have an entity that we can map our JSON to we simply call up the JSO
 
 ```java
 
-GeoLocation geolocation = (GeoLocation)JSONObjectMapper.getInstance().getDefaultObjectMapper().readValue(
-        "{latitude: 46.0231, longitude: -116.1239}",
+GeoLocation location = JSONObjectMapper.getInstance().<GeoLocation>mapJSONStringToEntity(
+        JSONString,
         GeoLocation.class
 );
 
