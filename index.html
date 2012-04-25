@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Java-json-object-mapper by scottbyrns</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Java-json-object-mapper</h1>
+        <p>Utility object to map JSON to entities.</p>
+        <p class="view"><a href="https://github.com/scottbyrns/Java-JSON-Object-Mapper">View the Project on GitHub <small>scottbyrns/Java-JSON-Object-Mapper</small></a></p>
+        <ul>
+          <li><a href="https://github.com/scottbyrns/Java-JSON-Object-Mapper/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/scottbyrns/Java-JSON-Object-Mapper/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/scottbyrns/Java-JSON-Object-Mapper">Fork On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h2>Java JSON Object Mapper</h2>
+
+<p>The JSON Object Mapper will hydrate an entity from a JSON string.</p>
+
+<h3>Declaring our Entity.</h3>
+
+<div class="highlight">
+<pre><span class="cm">/**</span>
+<span class="cm"> * Example entity for testing the JSON object mapper.</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">GeoLocation</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kt">double</span> <span class="n">latitude</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">double</span> <span class="n">longitude</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setLatitude</span> <span class="o">(</span><span class="kt">double</span> <span class="n">latitude</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">latitude</span> <span class="o">=</span> <span class="n">latitude</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">getLatitude</span> <span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">latitude</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setLongitude</span> <span class="o">(</span><span class="kt">double</span> <span class="n">longitude</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">longitude</span> <span class="o">=</span> <span class="n">longitude</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">getLongitude</span> <span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">longitude</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre>
+</div>
+
+
+<h3>Mapping our JSON to our Entity.</h3>
+
+<div class="highlight">
+<pre><span class="n">GeoLocation</span> <span class="n">location</span> <span class="o">=</span> <span class="n">JSONObjectMapper</span><span class="o">.</span><span class="na">mapJSONStringToEntity</span><span class="o">(</span>
+        <span class="s">"{ \"latitude\": 46.0231, \"longitude\": -116.1239 }"</span><span class="o">,</span>
+        <span class="n">GeoLocation</span><span class="o">.</span><span class="na">class</span>
+<span class="o">);</span>
+</pre>
+</div>
+
+
+<p><em>Note: The properties of your entity class must match the JSON keys.</em></p>
+
+<h2>Exceptions</h2>
+
+<p>The JSONObjectMapper can throw two exceptions:</p>
+
+<h3>InvalidJSONStringException</h3>
+
+<div class="highlight">
+<pre><span class="k">catch</span> <span class="o">(</span><span class="n">InvalidJSONStringException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+          <span class="c1">// The JSON string was invalid.</span>
+<span class="o">}</span>
+</pre>
+</div>
+
+
+<h3>FatalMappingException</h3>
+
+<div class="highlight">
+<pre><span class="k">catch</span> <span class="o">(</span><span class="n">FatalMappingException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+          <span class="c1">// The entity was not compatible.</span>
+<span class="o">}</span>
+</pre>
+</div>
+
+
+<h2>Support or Contact</h2>
+
+<p>Having trouble with the JSON Object Mapper? Generate the documentation with JavaDoc or contact me, (<a href="https://github.com/scottbyrns" class="user-mention">@scottbyrns</a>) directly and I'll help you sort it out.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/scottbyrns">scottbyrns</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
