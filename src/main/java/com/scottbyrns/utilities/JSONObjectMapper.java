@@ -64,7 +64,7 @@ public class JSONObjectMapper
      *
      * @return Object mapper instance.
      */
-    public static JSONObjectMapper getInstance()
+    private static JSONObjectMapper getInstance()
     {
         if (null == instance) {
             instance = new JSONObjectMapper();
@@ -84,10 +84,10 @@ public class JSONObjectMapper
      * @throws InvalidJSONStringException The JSON string provided was not valid.
      * @throws FatalMappingException A fatal mapping exception occurred.
      */
-    public <T> T mapJSONStringToEntity (String JSONString, Class<T> entity) throws InvalidJSONStringException, FatalMappingException {
+    public static <T> T mapJSONStringToEntity (String JSONString, Class<T> entity) throws InvalidJSONStringException, FatalMappingException {
         T mappedEntity = null;
         try {
-            mappedEntity = (T)defaultObjectMapper.readValue(JSONString, (Class)entity);
+            mappedEntity = (T)JSONObjectMapper.getInstance().defaultObjectMapper.readValue(JSONString, (Class)entity);
         }
         catch (JsonMappingException e) {
             throw new FatalMappingException(e);

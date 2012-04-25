@@ -22,7 +22,7 @@ public class TestJSONObjectMapper {
     @Test
     public void testMappingAJSONStringToAnEntity() {
         try {
-            GeoLocation location = JSONObjectMapper.getInstance().<GeoLocation>mapJSONStringToEntity(
+            GeoLocation location = JSONObjectMapper.mapJSONStringToEntity(
                     JSONString,
                     GeoLocation.class
             );
@@ -52,7 +52,7 @@ public class TestJSONObjectMapper {
     public void testInvalidJSON () {
         boolean jsonIsInvalid = false;
         try {
-            GeoLocation location = JSONObjectMapper.getInstance().mapJSONStringToEntity(
+            GeoLocation location = JSONObjectMapper.mapJSONStringToEntity(
                     InvalidJSONString,
                     GeoLocation.class
             );
