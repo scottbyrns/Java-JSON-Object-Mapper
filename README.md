@@ -1,4 +1,4 @@
-## Java JSON Object Mapper
+## Java JSON Object Mapper [![Build Status](https://secure.travis-ci.org/scottbyrns/Java-JSON-Object-Mapper.png?branch=master)][travis]
 
 The JSON Object Mapper will hydrate an entity from a JSON string.
 
