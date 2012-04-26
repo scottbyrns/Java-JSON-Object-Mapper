@@ -6,7 +6,7 @@
 
     <groupId>com.scottbyrns.utilities</groupId>
     <artifactId>json-object-mapper</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <packaging>jar</packaging>
     <name>JSON Object Mapper</name>
     <description>
