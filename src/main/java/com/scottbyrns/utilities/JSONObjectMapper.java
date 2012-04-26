@@ -15,6 +15,9 @@
  */
 package com.scottbyrns.utilities;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
@@ -33,12 +36,18 @@ import java.io.IOException;
  */
 public class JSONObjectMapper
 {
+    {
+
+    }
+    public static Logger logger = Logger.getLogger(JSONObjectMapper.class);
+
+
+
     private static JSONObjectMapper instance;
     private ObjectMapper defaultObjectMapper = new ObjectMapper();
 
     private JSONObjectMapper()
     {
-
         setDefaultObjectMapper(new ObjectMapper());
 
 
@@ -63,6 +72,7 @@ public class JSONObjectMapper
         defaultObjectMapper.configure(SerializationConfig.Feature.WRITE_ENUMS_USING_TO_STRING, true);
         defaultObjectMapper.configure(DeserializationConfig.Feature.READ_ENUMS_USING_TO_STRING, true);
 
+        logger.info("\n\n\n JSON Object Mapper\n https://github.com/scottbyrns/Java-JSON-Object-Mapper\n\n Licensed under the Apache License, Version 2.0\n\n ------( Please Contribute Failing Unit Tests )------\n\n If you find particular inputs that cause issue\n please write a failing unit test and send a pull\n request on github.\n\n\n");
     }
 
     /**
@@ -82,6 +92,7 @@ public class JSONObjectMapper
     private static JSONObjectMapper getInstance()
     {
         if (null == instance) {
+            logger.debug("Creating the JSONObjectMapper singleton instance.");
             instance = new JSONObjectMapper();
         }
 
@@ -100,19 +111,25 @@ public class JSONObjectMapper
      * @throws FatalMappingException A fatal mapping exception occurred.
      */
     public static <T> T mapJSONStringToEntity (String JSONString, Class<T> entity) throws InvalidJSONStringException, FatalMappingException {
+        logger.debug(
+                "JSON Input:\n      " +
+                JSONString
+        );
         T mappedEntity = null;
         try {
-            mappedEntity = (T)JSONObjectMapper.getInstance().defaultObjectMapper.readValue(JSONString, (Class)entity);
+            mappedEntity = JSONObjectMapper.getInstance().defaultObjectMapper.<T>readValue(JSONString, entity);
         }
         catch (JsonMappingException e) {
+            logger.debug("\n\n\nJackson threw a JsonMapping Exception.\n\n\n");
             throw new FatalMappingException(e);
         }
         catch (JsonParseException e) {
+            logger.debug("\n\n\nJackson threw a JsonParse Exception. This is probably due to malformed JSON.\n\n\n");
             throw new InvalidJSONStringException(e);
         }
         catch (IOException e) {
             // I don't think we can fall through to this catch when mapping a string.
-            System.out.println("Exception not handled. See JSONObjectMapper#mapJSONStringToEntity.");
+            logger.debug("\n\n\nException not handled. See JSONObjectMapper#mapJSONStringToEntity.\n\n\n");
         }
         return mappedEntity;
     }
@@ -131,14 +148,21 @@ public class JSONObjectMapper
             outputString = JSONObjectMapper.getInstance().defaultObjectMapper.writeValueAsString(entity);
         }
         catch (JsonMappingException e) {
+            logger.debug("\n\n\nJackson threw a JsonMapping Exception.\n\n\n");
             throw new FatalMappingException(e);
         }
         catch (JsonGenerationException e) {
+            logger.debug("\n\n\nJackson threw a JsonGeneration Exception. Ensure your entities break down into simple types.\n\n\n");
             throw new FatalMappingException(e);
         }
         catch (IOException e) {
+            logger.debug("\n\n\nJackson threw an IO Exception.\n\n\n");
             throw new FatalMappingException(e);
         }
+        logger.debug(
+                "JSON Output:\n     " +
+                outputString
+        );
         return outputString;
     }
 }
