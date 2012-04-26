@@ -15,6 +15,7 @@
  */
 package com.scottbyrns.utilities;
 
+import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.map.DeserializationConfig;
@@ -22,7 +23,6 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.map.deser.BeanDeserializerFactory;
-import org.codehaus.jackson.map.deser.CustomDeserializerFactory;
 import org.codehaus.jackson.map.deser.StdDeserializerProvider;
 import org.codehaus.jackson.map.ser.CustomSerializerFactory;
 
@@ -115,5 +115,30 @@ public class JSONObjectMapper
             System.out.println("Exception not handled. See JSONObjectMapper#mapJSONStringToEntity.");
         }
         return mappedEntity;
+    }
+
+    /**
+     * Convert an entity instance to a JSON string.
+     *
+     * @param entity The entity to convert to JSON
+     *
+     * @return JSON String representation of the entity.
+     * @throws FatalMappingException There was a fatal mapping exception.
+     */
+    public static String convertEntityToJSON (Object entity) throws FatalMappingException {
+        String outputString;
+        try {
+            outputString = JSONObjectMapper.getInstance().defaultObjectMapper.writeValueAsString(entity);
+        }
+        catch (JsonMappingException e) {
+            throw new FatalMappingException(e);
+        }
+        catch (JsonGenerationException e) {
+            throw new FatalMappingException(e);
+        }
+        catch (IOException e) {
+            throw new FatalMappingException(e);
+        }
+        return outputString;
     }
 }
