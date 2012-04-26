@@ -27,8 +27,9 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/scottbyrns/Java-JSON-Object-Mapper</url>
-        <connection>git://github.com/scottbyrns/Java-JSON-Object-Mapper.git</connection>
+        <connection>scm:git:git@github.com:scottbyrns/Java-JSON-Object-Mapper.git</connection>
+        <developerConnection>scm:git:git@github.com:scottbyrns/Java-JSON-Object-Mapper.git</developerConnection>
+        <url>git@github.com:scottbyrns/Java-JSON-Object-Mapper.git</url>
     </scm>
 
     <developers>
