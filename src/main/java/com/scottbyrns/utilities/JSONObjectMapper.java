@@ -19,12 +19,11 @@ import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
+import org.codehaus.jackson.map.*;
 import org.codehaus.jackson.map.deser.BeanDeserializerFactory;
+import org.codehaus.jackson.map.deser.BeanDeserializerModifier;
 import org.codehaus.jackson.map.deser.StdDeserializerProvider;
+import org.codehaus.jackson.map.deser.ValueInstantiators;
 import org.codehaus.jackson.map.ser.CustomSerializerFactory;
 
 import java.io.IOException;
@@ -49,13 +48,6 @@ public class JSONObjectMapper
         //Custom Serializers
         CustomSerializerFactory csf = new CustomSerializerFactory();
         defaultObjectMapper.setSerializerFactory(csf);
-
-        //Custom Deserializers
-        BeanDeserializerFactory customDeserializerFactory = new BeanDeserializerFactory();
-
-        StdDeserializerProvider stdDeserializerProvider = new StdDeserializerProvider(customDeserializerFactory);
-
-        defaultObjectMapper.setDeserializerProvider(stdDeserializerProvider);
 
         defaultObjectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES,
                                       false);
