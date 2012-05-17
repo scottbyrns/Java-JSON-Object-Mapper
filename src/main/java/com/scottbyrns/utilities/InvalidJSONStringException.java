@@ -20,7 +20,8 @@ package com.scottbyrns.utilities;
  */
 public class InvalidJSONStringException extends Exception
 {
-    public InvalidJSONStringException(Throwable throwable) {
+    public InvalidJSONStringException(Throwable throwable)
+    {
         super(throwable);
     }
 }

@@ -20,7 +20,8 @@ package com.scottbyrns.utilities;
  */
 public class FatalMappingException extends Exception
 {
-    public FatalMappingException(Throwable throwable) {
+    public FatalMappingException(Throwable throwable)
+    {
         super(throwable);
     }
 }

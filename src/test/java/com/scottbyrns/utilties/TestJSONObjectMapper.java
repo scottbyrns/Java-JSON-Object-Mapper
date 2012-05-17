@@ -26,36 +26,35 @@ import static junit.framework.Assert.*;
 /**
  * Testing the object mapper.
  */
-public class TestJSONObjectMapper {
+public class TestJSONObjectMapper
+{
 
-    private String JSONString = "{ \"latitude\": 46.0231, \"longitude\": -116.1239 }";
+    private String JSONString        = "{\"latitude\":46.0231,\"longitude\":-116.1239}";
     private String InvalidJSONString = "{ \"latitude\" 46.0231, \"longitude\": -116.1239 }";
 
     /**
      * Testing mapping a JSON String to an Entity.
      */
     @Test
-    public void testMappingAJSONStringToAnEntity() {
-        try {
-            GeoLocation location = JSONObjectMapper.mapJSONStringToEntity(
-                    JSONString,
-                    GeoLocation.class
-            );
-            assertEquals(
-                    "The latitude of our hydrated location object is not the same as it was in the provided JSON.",
-                    location.getLatitude(),
-                    46.0231
-            );
-            assertEquals(
-                    "The longitude of our hydrated location object is not the same as it was in the provided JSON.",
-                    location.getLongitude(),
-                    -116.1239
-            );
+    public void testMappingAJSONStringToAnEntity()
+    {
+        try
+        {
+            GeoLocation location = JSONObjectMapper.mapJSONStringToEntity(JSONString,
+                                                                          GeoLocation.class);
+            assertEquals("The latitude of our hydrated location object is not the same as it was in the provided JSON.",
+                         location.getLatitude(),
+                         46.0231);
+            assertEquals("The longitude of our hydrated location object is not the same as it was in the provided JSON.",
+                         location.getLongitude(),
+                         -116.1239);
         }
-        catch (InvalidJSONStringException e) {
+        catch (InvalidJSONStringException e)
+        {
             fail("The object mapper incorrectly declared our JSON string to be invalid.");
         }
-        catch (FatalMappingException e) {
+        catch (FatalMappingException e)
+        {
             fail("The object mapper incorrectly declared our entity incompatible");
         }
     }
@@ -64,25 +63,61 @@ public class TestJSONObjectMapper {
      * Test invalid JSON to ensure that it produces an exception.
      */
     @Test
-    public void testInvalidJSON () {
+    public void testInvalidJSON()
+    {
         boolean jsonIsInvalid = false;
-        try {
-            GeoLocation location = JSONObjectMapper.mapJSONStringToEntity(
-                    InvalidJSONString,
-                    GeoLocation.class
-            );
+        try
+        {
+            GeoLocation location = JSONObjectMapper.mapJSONStringToEntity(InvalidJSONString,
+                                                                          GeoLocation.class);
         }
-        catch (InvalidJSONStringException e) {
+        catch (InvalidJSONStringException e)
+        {
             jsonIsInvalid = true;
         }
-        catch (FatalMappingException e) {
+        catch (FatalMappingException e)
+        {
             fail("The object mapper incorrectly declared our entity incompatible");
         }
 
-        assertTrue(
-                "Our invalid JSON failed to raise an exception.",
-                jsonIsInvalid
-        );
+        assertTrue("Our invalid JSON failed to raise an exception.",
+                   jsonIsInvalid);
+    }
+
+    /**
+     * Testing converting an entity to a JSON String.
+     */
+    @Test
+    public void testConvertingAnEntityToAJSONString()
+    {
+        GeoLocation location = null;
+        try
+        {
+            location = JSONObjectMapper.mapJSONStringToEntity(JSONString,
+                                                              GeoLocation.class);
+        }
+        catch (InvalidJSONStringException e)
+        {
+            fail("Invalid JSON Provided.");
+        }
+        catch (FatalMappingException e)
+        {
+            fail("The object mapper was unable to convert your entity to JSON.");
+        }
+
+
+        try
+        {
+            String jsonString = JSONObjectMapper.convertEntityToJSON(location);
+
+            assertEquals("The JSON produced should be the same as the JSON it was mapped from.",
+                         JSONString,
+                         jsonString);
+        }
+        catch (FatalMappingException e)
+        {
+            fail("A fatal mapping exception was thrown.");
+        }
     }
 
 }
