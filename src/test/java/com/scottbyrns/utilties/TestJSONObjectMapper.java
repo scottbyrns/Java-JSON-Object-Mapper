@@ -60,6 +60,33 @@ public class TestJSONObjectMapper
     }
 
     /**
+     * Testing mapping a JSON String to an Entity.
+     */
+    @Test
+    public void testMappingAJSONNodeStringToAnEntity()
+    {
+        try
+        {
+            GeoLocation location = JSONObjectMapper.mapJSONNodeStringToEntity("{\"status\":200, \"response\":" + JSONString + "}", "response",
+                                                                          GeoLocation.class);
+            assertEquals("The latitude of our hydrated location object is not the same as it was in the provided JSON.",
+                         location.getLatitude(),
+                         46.0231);
+            assertEquals("The longitude of our hydrated location object is not the same as it was in the provided JSON.",
+                         location.getLongitude(),
+                         -116.1239);
+        }
+        catch (InvalidJSONStringException e)
+        {
+            fail("The object mapper incorrectly declared our JSON string to be invalid.");
+        }
+        catch (FatalMappingException e)
+        {
+            fail("The object mapper incorrectly declared our entity incompatible");
+        }
+    }
+
+    /**
      * Test invalid JSON to ensure that it produces an exception.
      */
     @Test

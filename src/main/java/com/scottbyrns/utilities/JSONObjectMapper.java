@@ -25,6 +25,8 @@ import org.codehaus.jackson.map.deser.BeanDeserializerModifier;
 import org.codehaus.jackson.map.deser.StdDeserializerProvider;
 import org.codehaus.jackson.map.deser.ValueInstantiators;
 import org.codehaus.jackson.map.ser.CustomSerializerFactory;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -109,6 +111,43 @@ public class JSONObjectMapper
         {
             mappedEntity = JSONObjectMapper.getInstance().defaultObjectMapper.<T>readValue(JSONString,
                                                                                            entity);
+        }
+        catch (JsonMappingException e)
+        {
+            logger.debug("\n\n\nJackson threw a JsonMapping Exception.\n\n\n");
+            throw new FatalMappingException(e);
+        }
+        catch (JsonParseException e)
+        {
+            logger.debug("\n\n\nJackson threw a JsonParse Exception. This is probably due to malformed JSON.\n\n\n");
+            throw new InvalidJSONStringException(e);
+        }
+        catch (IOException e)
+        {
+            // I don't think we can fall through to this catch when mapping a string.
+            logger.debug("\n\n\nException not handled. See JSONObjectMapper#mapJSONStringToEntity.\n\n\n");
+        }
+        return mappedEntity;
+    }
+
+    public static <T> T mapJSONNodeStringToEntity(String JSONString, String rootNode, Class<T> entity) throws InvalidJSONStringException, FatalMappingException
+    {
+        logger.debug("JSON Input:\n      " + JSONString);
+        T mappedEntity = null;
+        try
+        {
+            try {
+                JSONObject object = new JSONObject(JSONString);
+                String node = object.getString(rootNode);
+
+                mappedEntity = JSONObjectMapper.getInstance().defaultObjectMapper.<T>readValue(node,
+                                                                                               entity);
+            }
+            catch (JSONException e) {
+                // NOP
+            }
+//            mappedEntity = JSONObjectMapper.getInstance().defaultObjectMapper.<T>readValue(JSONString,
+//                                                                                           entity);
         }
         catch (JsonMappingException e)
         {
