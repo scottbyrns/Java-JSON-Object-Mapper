@@ -18,7 +18,13 @@ package com.scottbyrns.utilties;
 import com.scottbyrns.utilities.FatalMappingException;
 import com.scottbyrns.utilities.InvalidJSONStringException;
 import com.scottbyrns.utilities.JSONObjectMapper;
+import org.codehaus.jackson.JsonParser;
+import org.codehaus.jackson.JsonProcessingException;
+import org.codehaus.jackson.map.DeserializationContext;
+import org.codehaus.jackson.map.JsonDeserializer;
 import org.junit.Test;
+
+import java.io.IOException;
 
 import static junit.framework.Assert.*;
 
@@ -31,6 +37,8 @@ public class TestJSONObjectMapper
 
     private String JSONString        = "{\"latitude\":46.0231,\"longitude\":-116.1239}";
     private String InvalidJSONString = "{ \"latitude\" 46.0231, \"longitude\": -116.1239 }";
+    private String MembersJSON = "{\"status\":200,\"response\":{\"id\":12,\"tribeList\":null,\"name\":null,\"persona\":null}}";
+    private String JSONMap = "{\"stringGeoLocationMap\":{{ \"latitude\": 46.0231, \"longitude\": -116.1239 }:\"keyString\"}}";
 
     /**
      * Testing mapping a JSON String to an Entity.
@@ -42,7 +50,7 @@ public class TestJSONObjectMapper
         {
             GeoLocation location = JSONObjectMapper.mapJSONStringToEntity(JSONString,
                                                                           GeoLocation.class);
-            assertEquals("The latitude of our hydrated location object is not the same as it was in the provided JSON.",
+            assertEquals("The latitude of our hydrate d location object is not the same as it was in the provided JSON.",
                          location.getLatitude(),
                          46.0231);
             assertEquals("The longitude of our hydrated location object is not the same as it was in the provided JSON.",
@@ -55,6 +63,41 @@ public class TestJSONObjectMapper
         }
         catch (FatalMappingException e)
         {
+            fail("The object mapper incorrectly declared our entity incompatible");
+        }
+    }
+
+//    @Test
+    public void testDeserializerModulePlugin () {
+        try {
+
+            JsonDeserializer<GeoLocation> geoLocationJsonDeserializer = new JsonDeserializer<GeoLocation>() {
+                @Override
+                public GeoLocation deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException
+                {
+
+                    return null;  //To change body of implemented methods use File | Settings | File Templates.
+                }
+            };
+            JSONObjectMapper.registerDeserializerModule("GeoLocation", geoLocationJsonDeserializer, GeoLocation.class);
+
+            JSONMap jsonMap = JSONObjectMapper.mapJSONStringToEntity(JSONMap, JSONMap.class);
+            GeoLocation location = jsonMap.getStringGeoLocationMap().keySet().iterator().next();
+            assertEquals("The latitude of our hydrate d location object is not the same as it was in the provided JSON.",
+                         location.getLatitude(),
+                         46.0231);
+            assertEquals("The longitude of our hydrated location object is not the same as it was in the provided JSON.",
+                         location.getLongitude(),
+                         -116.1239);
+        }
+        catch (InvalidJSONStringException e)
+        {
+            e.printStackTrace();
+            fail("The object mapper incorrectly declared our JSON string to be invalid.");
+        }
+        catch (FatalMappingException e)
+        {
+            e.printStackTrace();
             fail("The object mapper incorrectly declared our entity incompatible");
         }
     }
@@ -85,6 +128,31 @@ public class TestJSONObjectMapper
             fail("The object mapper incorrectly declared our entity incompatible");
         }
     }
+
+//    /**
+//     * Test invalid JSON to ensure that it produces an exception.
+//     */
+//    @Test
+//    public void testMembersJson()
+//    {
+//        boolean jsonIsInvalid = false;
+//        try
+//        {
+//            GeoLocation location = JSONObjectMapper.mapJSONStringToEntity(MembersJSON,
+//                                                                          GeoLocation.class);
+//        }
+//        catch (InvalidJSONStringException e)
+//        {
+//            jsonIsInvalid = true;
+//        }
+//        catch (FatalMappingException e)
+//        {
+//            fail("The object mapper incorrectly declared our entity incompatible");
+//        }
+//
+//        assertTrue("Our invalid JSON failed to raise an exception.",
+//                   jsonIsInvalid);
+//    }
 
     /**
      * Test invalid JSON to ensure that it produces an exception.

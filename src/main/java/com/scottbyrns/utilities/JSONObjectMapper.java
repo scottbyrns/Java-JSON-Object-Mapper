@@ -18,13 +18,16 @@ package com.scottbyrns.utilities;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.Version;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.map.*;
 import org.codehaus.jackson.map.deser.BeanDeserializerFactory;
 import org.codehaus.jackson.map.deser.BeanDeserializerModifier;
 import org.codehaus.jackson.map.deser.StdDeserializerProvider;
 import org.codehaus.jackson.map.deser.ValueInstantiators;
+import org.codehaus.jackson.map.module.SimpleModule;
 import org.codehaus.jackson.map.ser.CustomSerializerFactory;
+import org.codehaus.jackson.type.TypeReference;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,16 +54,12 @@ public class JSONObjectMapper
         CustomSerializerFactory csf = new CustomSerializerFactory();
         defaultObjectMapper.setSerializerFactory(csf);
 
-        defaultObjectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES,
-                                      false);
-        defaultObjectMapper.configure(SerializationConfig.Feature.AUTO_DETECT_GETTERS,
-                                      false);
-        defaultObjectMapper.configure(SerializationConfig.Feature.AUTO_DETECT_IS_GETTERS,
-                                      false);
+        defaultObjectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        defaultObjectMapper.configure(SerializationConfig.Feature.AUTO_DETECT_GETTERS, false);
+        defaultObjectMapper.configure(SerializationConfig.Feature.AUTO_DETECT_IS_GETTERS, false);
         defaultObjectMapper.setVisibilityChecker(defaultObjectMapper.getVisibilityChecker().withFieldVisibility(JsonAutoDetect.Visibility.ANY));
 
-        defaultObjectMapper.configure(SerializationConfig.Feature.WRITE_ENUMS_USING_TO_STRING,
-                                      true);
+        defaultObjectMapper.configure(SerializationConfig.Feature.WRITE_ENUMS_USING_TO_STRING, true);
         defaultObjectMapper.configure(DeserializationConfig.Feature.READ_ENUMS_USING_TO_STRING,
                                       true);
 
@@ -136,18 +135,21 @@ public class JSONObjectMapper
         T mappedEntity = null;
         try
         {
-            try {
+            try
+            {
                 JSONObject object = new JSONObject(JSONString);
                 String node = object.getString(rootNode);
 
                 mappedEntity = JSONObjectMapper.getInstance().defaultObjectMapper.<T>readValue(node,
                                                                                                entity);
             }
-            catch (JSONException e) {
+            catch (JSONException e)
+            {
+                e.printStackTrace();
                 // NOP
             }
-//            mappedEntity = JSONObjectMapper.getInstance().defaultObjectMapper.<T>readValue(JSONString,
-//                                                                                           entity);
+            //            mappedEntity = JSONObjectMapper.getInstance().defaultObjectMapper.<T>readValue(JSONString,
+            //                                                                                           entity);
         }
         catch (JsonMappingException e)
         {
@@ -198,5 +200,15 @@ public class JSONObjectMapper
         }
         logger.debug("JSON Output:\n     " + outputString);
         return outputString;
+    }
+
+    public static <T> void registerDeserializerModule(String deserializerName, JsonDeserializer jsonDeserializer, Class<T> entityClass)
+    {
+        SimpleModule module = new SimpleModule(
+                deserializerName,
+                new Version(1, 0, 0, null)
+        );
+        module.addDeserializer(entityClass, jsonDeserializer);
+        getInstance().defaultObjectMapper.registerModule(module);
     }
 }
