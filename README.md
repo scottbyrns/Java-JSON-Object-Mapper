@@ -2,6 +2,27 @@
 
 The JSON Object Mapper will hydrate an entity from a JSON string.
 
+### Maven
+
+#### Repository
+```xml
+<repositories>
+    <repository>
+        <id>scottbyrns-snapshots</id>
+        <url>https://github.com/scottbyrns/Scottbyrns-Maven-Repo/raw/master/snapshots</url>
+    </repository>
+</repositories>
+```
+
+#### Dependency
+```xml
+<dependency>
+    <groupId>com.scottbyrns.utilities</groupId>
+    <artifactId>json-object-mapper</artifactId>
+    <version>1.1.3-SNAPSHOT</version>
+</dependency>
+```
+
 ### Declaring our Entity.
 ```java
 /**
